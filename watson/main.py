@@ -6,6 +6,14 @@ from ibm_watsonx_ai import APIClient
 from ibm_watson_machine_learning.foundation_models import Model
 from token_generator import generate_token
 from doc_collector import read_file_from_cos ,list_files_in_bucket
+import argparse
+
+#pass the dir path as argument
+parser = argparse.ArgumentParser(description='Read files and list directory contents from a local repository.')
+parser.add_argument('repo_path', type=str, help='Path to the local repository')
+args = parser.parse_args()
+
+repo_path = args.repo_path
 
 warnings.filterwarnings("ignore")
 
@@ -35,6 +43,9 @@ for cos_file_key in cos_file_list:
     file_content = read_file_from_cos(cos_bucket_name, cos_file_key, cos_api_key, cos_service_instance_id, cos_endpoint_url)
     if file_content:
         code_files.append(file_content)
+
+
+
 
 def main():
     start_time = time.time()

@@ -1,4 +1,5 @@
 import ibm_boto3
+import os
 from ibm_botocore.client import Config, ClientError
 
 def read_file_from_cos(bucket_name, file_key, api_key, service_instance_id, endpoint_url):
@@ -38,4 +39,28 @@ def list_files_in_bucket(bucket_name, api_key, service_instance_id, endpoint_url
         exit()
     except Exception as e:
         print("Unable to retrieve bucket contents: {0}".format(e))
+        exit()
+
+#defined two functions
+def read_file_from_local_repo(repo_path, file_path):
+    full_path = os.path.join(repo_path, file_path)
+    try:
+        with open(full_path, 'r') as file:
+            return file.read()
+    except FileNotFoundError:
+        print(f"File not found: {full_path}")
+        exit()
+    except Exception as e:
+        print(f"Unable to retrieve file contents: {e}")
+        exit()
+
+def list_files_in_local_repo(repo_path):
+    try:
+        files = []
+        for root, dirs, filenames in os.walk(repo_path):
+            for filename in filenames:
+                files.append(os.path.relpath(os.path.join(root, filename), repo_path))
+        return files
+    except Exception as e:
+        print(f"Unable to retrieve directory contents: {e}")
         exit()
