@@ -1,28 +1,30 @@
 import time
 import os
-import warnings
+import json
+from itertools import cycle
 
-from ibm_watsonx_ai import APIClient
-from ibm_watson_machine_learning.foundation_models import Model
-from token_generator import generate_token
-from doc_collector import read_file_from_cos ,list_files_in_bucket
-import argparse
-
-#pass the dir path as argument
-parser = argparse.ArgumentParser(description='Read files and list directory contents from a local repository.')
-parser.add_argument('repo_path', type=str, help='Path to the local repository')
-args = parser.parse_args()
-
-repo_path = args.repo_path
-
-warnings.filterwarnings("ignore")
-
-project_id = "fcad2fce-4610-4de3-babd-177600dbad19"
+from doc_collector import list_files_in_git_repo, read_file_from_git_repo
+from doc_generator import generate_doc
 
 def get_parent_file_path():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir) 
 
+def load_config():
+    with open(os.path.join(get_parent_file_path(), "watson/config.json")) as config_file:
+        return json.load(config_file)
+
+config = load_config()
+
 docs_path = os.path.join(get_parent_file_path(), "generated-docs")
+repo_path = config['GITHUB_REPO']
+git_branch = config['GITHUB_BRANCH']
+github_token = config['GITHUB_TOKEN']
+projects_params = config['PROJECTS_PARAMS']
+file_extensions = config['FILE_EXTENSIONS']
+model_id = config['MODEL_ID']
+model_params = config['MODEL_PARAMS']
+
+projects_dict = {project['PROJECT_ID']: {'API_Key': project['API_Key'], 'Endpoint_URL': project['MODEL_ENDPOINT_URL']} for project in projects_params}
 
 prompt = "input" """<|system|>
     generate a readme file in markdown format that documents the code below.
@@ -30,57 +32,29 @@ prompt = "input" """<|system|>
     here is the code:
     """
 
-# Constants for IBM COS values
-cos_api_key = os.getenv('COS_API_KEY')
-cos_service_instance_id = "crn:v1:bluemix:public:cloud-object-storage:global:a/5c6117ae971c4610a3952401b0bf5a77:a26b5106-54ab-4f56-a43d-dd593a29a7ed::"
-cos_endpoint_url = "https://s3.eu-de.cloud-object-storage.appdomain.cloud"
-cos_bucket_name = "cloud-object-storage-cos-terraform-code"
-
-cos_file_list = list_files_in_bucket(cos_bucket_name, cos_api_key, cos_service_instance_id, cos_endpoint_url)
-
-code_files = []
-for cos_file_key in cos_file_list:
-    file_content = read_file_from_cos(cos_bucket_name, cos_file_key, cos_api_key, cos_service_instance_id, cos_endpoint_url)
-    if file_content:
-        code_files.append(file_content)
-
-
-
-
 def main():
     start_time = time.time()
+
+    code_file_list = list_files_in_git_repo(repo_path, git_branch, github_token)
+    print("files found in repo:", code_file_list)
+
+    code_files = []
+    for file_key in code_file_list:
+        if any(file_key.endswith(ext) for ext in file_extensions):
+            file_content = read_file_from_git_repo(repo_path, file_key, git_branch, github_token)
+            if file_content:
+                code_files.append(f"{prompt}\n{file_content}\n <|assistant|>\n")
+
+    project_cycle = cycle(projects_dict.items())
     
-    credentials = {
-        "url": "https://eu-gb.ml.cloud.ibm.com",
-        "token": generate_token()
-    }
-
-    client = APIClient(credentials)
-    client.set.default_project(project_id)
-
-    input_texts = set()
-    for code_file in code_files:
-        input_texts.add(f"{prompt}\n{code_file}\n <|assistant|>\n")
-
-    # Model initialization
-    generate_params = {
-        "temperature": 0.3,
-        "decoding_method": "greedy",
-        "max_new_tokens": 900,
-        "repetition_penalty": 1.05
-    }
-
-    model = Model(
-        model_id="ibm/granite-13b-chat-v2",  # Replace with your model ID
-        params=generate_params,
-        credentials=credentials,
-        project_id=project_id,
-    )
-
     results = []
-    for input_text in input_texts:
-        response = model.generate(input_text)
-        results.extend(response.get('results', []))
+    for input_text in code_files:
+        project_id, project_info = next(project_cycle)
+        api_key = project_info['API_Key']
+        endpoint_url = project_info['Endpoint_URL']
+        print(f"Generating documentation using project {project_id}")
+        result = generate_doc(project_id, api_key, input_text, model_id, endpoint_url, model_params)
+        results.extend(result)
 
     # Ensure the docs_path directory exists
     os.makedirs(docs_path, exist_ok=True)

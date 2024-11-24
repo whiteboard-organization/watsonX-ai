@@ -1,10 +1,9 @@
 import os
 import requests
 
-def generate_token():
+def generate_token(api_key):
     # Read the API key from the environment variable
     api_url = "https://iam.cloud.ibm.com/identity/token"
-    api_key = os.getenv('API_KEY')
 
     if not api_key:
         print("Error: API_KEY environment variable not set.")

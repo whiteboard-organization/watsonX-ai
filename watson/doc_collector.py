@@ -1,6 +1,8 @@
 import ibm_boto3
 import os
+import requests
 from ibm_botocore.client import Config, ClientError
+import base64
 
 def read_file_from_cos(bucket_name, file_key, api_key, service_instance_id, endpoint_url):
     cos_client = ibm_boto3.client("s3",
@@ -41,26 +43,27 @@ def list_files_in_bucket(bucket_name, api_key, service_instance_id, endpoint_url
         print("Unable to retrieve bucket contents: {0}".format(e))
         exit()
 
-#defined two functions
-def read_file_from_local_repo(repo_path, file_path):
-    full_path = os.path.join(repo_path, file_path)
+def read_file_from_git_repo(repo_url, file_path, branch='develop', token=None):
+    api_url = f"https://api.github.com/repos/{repo_url}/contents/{file_path}?ref={branch}"
+    headers = {'Authorization': f'token {token}'} if token else {}
     try:
-        with open(full_path, 'r') as file:
-            return file.read()
-    except FileNotFoundError:
-        print(f"File not found: {full_path}")
-        exit()
-    except Exception as e:
+        response = requests.get(api_url, headers=headers)
+        response.raise_for_status()
+        file_content = response.json().get('content', '')
+        return base64.b64decode(file_content).decode('utf-8')
+    except requests.exceptions.RequestException as e:
         print(f"Unable to retrieve file contents: {e}")
         exit()
 
-def list_files_in_local_repo(repo_path):
+def list_files_in_git_repo(repo_url, branch='develop', token=None):
+    api_url = f"https://api.github.com/repos/{repo_url}/git/trees/{branch}?recursive=1"
+    headers = {'Authorization': f'token {token}'} if token else {}
     try:
-        files = []
-        for root, dirs, filenames in os.walk(repo_path):
-            for filename in filenames:
-                files.append(os.path.relpath(os.path.join(root, filename), repo_path))
+        response = requests.get(api_url, headers=headers)
+        response.raise_for_status()
+        tree = response.json().get('tree', [])
+        files = [item['path'] for item in tree if item['type'] == 'blob']
         return files
-    except Exception as e:
-        print(f"Unable to retrieve directory contents: {e}")
+    except requests.exceptions.RequestException as e:
+        print(f"Unable to retrieve repository contents: {e}")
         exit()
