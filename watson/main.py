@@ -24,6 +24,7 @@ file_extensions = config['FILE_EXTENSIONS']
 model_id = config['MODEL_ID']
 model_params = config['MODEL_PARAMS']
 
+print(github_token)
 projects_dict = {project['PROJECT_ID']: {'API_Key': project['API_Key'], 'Endpoint_URL': project['MODEL_ENDPOINT_URL']} for project in projects_params}
 
 prompt = "input" """<|system|>
