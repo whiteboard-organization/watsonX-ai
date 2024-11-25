@@ -4,18 +4,18 @@
   "COS_SERVICE_INSTANCE_ID": "crn:v1:bluemix:public:cloud-object-storage:global:a/5c6117ae971c4610a3952401b0bf5a77:a26b5106-54ab-4f56-a43d-dd593a29a7ed::",
   "COS_ENDPOINT_URL": "https://s3.eu-de.cloud-object-storage.appdomain.cloud",
   "COS_BUCKET_NAME": "cloud-object-storage-cos-terraform-code",
-  "GITHUB_TOKEN": "<API_KEY>",
-  "GITHUB_REPO": "whiteboard-organization/application_config",
+  "GITHUB_TOKEN": "{{MY_GITHUB_TOKEN}}",
+  "GITHUB_REPO": "whiteboard-organization/eks_infra",
   "GITHUB_BRANCH": "develop",
   "PROJECTS_PARAMS": [
     {
       "PROJECT_ID": "fcad2fce-4610-4de3-babd-177600dbad19",
-      "API_Key": "<API_KEY>",
+      "API_Key": "{{PROJECT_API_KEY_1}}",
       "MODEL_ENDPOINT_URL": "https://eu-gb.ml.cloud.ibm.com"
     },
     {
       "PROJECT_ID": "845ef238-5f5c-4155-b84b-9b4ab9759270",
-      "API_Key": "<API_KEY>",
+      "API_Key": "{{PROJECT_API_KEY_2}}",
       "MODEL_ENDPOINT_URL": "https://eu-de.ml.cloud.ibm.com"
     }
   ],
