@@ -5,6 +5,7 @@ from itertools import cycle
 
 from doc_collector import list_files_in_git_repo, read_file_from_git_repo
 from doc_generator import generate_doc
+from token_generator import generate_token
 
 def get_parent_file_path():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir) 
@@ -24,8 +25,10 @@ file_extensions = config['FILE_EXTENSIONS']
 model_id = config['MODEL_ID']
 model_params = config['MODEL_PARAMS']
 
-print(github_token)
 projects_dict = {project['PROJECT_ID']: {'API_Key': project['API_Key'], 'Endpoint_URL': project['MODEL_ENDPOINT_URL']} for project in projects_params}
+
+for project_id, project_info in projects_dict.items():
+    print(f"Project ID: {project_id} - API Key: {project_info['API_Key']}")
 
 prompt = "input" """<|system|>
     generate a readme file in markdown format that documents the code below.
