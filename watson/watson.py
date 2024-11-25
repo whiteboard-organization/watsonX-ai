@@ -14,7 +14,7 @@ def load_config():
 
 config = load_config()
 
-docs_path = os.path.join(get_parent_file_path(), "generated-docs")
+docs_path = os.path.join(get_parent_file_path(), "docs")
 # repo_path = config['GITHUB_REPO']
 # git_branch = config['GITHUB_BRANCH']
 # github_token = config['GITHUB_TOKEN']
