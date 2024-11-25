@@ -1,24 +1,73 @@
-# watsonX-ai
-This repo contains a basic script to programmatically interact with watsonx platform
+# WatsonX AI Documentation Generator
 
-# Repository Documentation Generator
+This project generates documentation for code files in a local repository using IBM WatsonX AI.
 
-This README provides instructions for uploading files from a local repository to IBM Watsonx AI and generating documentation using the uploaded files.
+## Table of Contents
 
-## Prerequisites
+- [Introduction](#introduction)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Project Structure](#project-structure)
+- [Configuration](#configuration)
 
-- IBM Watsonx AI Python SDK
-- Python 3.6+
-- IBM Watsonx AI credentials
+## Introduction
+
+WatsonX AI is a project aimed at utilizing IBM Watson's capabilities to develop innovative AI applications. This project includes various tools and libraries to help developers build, train, and deploy AI models efficiently.
+
+## Features
+
+- Natural Language Processing (NLP)
+- Machine Learning (ML)
+- Integration with IBM Cloud
 
 ## Installation
 
-1. Install the IBM Watsonx AI Python SDK:
-   ```bash
-   pip install ibm-watsonx-ai
+To install the WatsonX AI project, follow these steps:
 
-## Authentication
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/watsonX-ai.git
+    ```
+2. Navigate to the project directory:
+    ```bash
+    cd watsonX-ai
+    ```
+3. Install the required dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-1. To generate a valid token use this command (request tha api key from the boss :p)
-   ```bash
-   curl -X POST 'https://iam.cloud.ibm.com/identity/token' -H 'Content-Type: application/x-www-form-urlencoded' -d 'grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=API_KEY'
+## Project Structure
+
+- `token_generator.py`: Generates an access token using an API key.
+- `main.py`: Main script to orchestrate the documentation generation process.
+- `doc_generator.py`: Generates documentation using IBM WatsonX AI.
+- `doc_collector.py`: Collects code files from a GitHub repository or IBM Cloud Object Storage.
+
+## Configuration
+
+The project requires a configuration file `config.json` located in the `watson` directory. The configuration file should contain the following parameters:
+
+```json
+{
+    "GITHUB_REPO": "your_github_repo",
+    "GITHUB_BRANCH": "your_github_branch",
+    "GITHUB_TOKEN": "your_github_token",
+    "PROJECTS_PARAMS": [
+        {
+            "PROJECT_ID": "your_project_id",
+            "API_Key": "your_api_key",
+            "MODEL_ENDPOINT_URL": "your_model_endpoint_url"
+        }
+    ],
+    "FILE_EXTENSIONS": [".py", ".java", ".js"],
+    "MODEL_ID": "your_model_id",
+    "MODEL_PARAMS": {
+        "param1": "value1",
+        "param2": "value2"
+    }
+}
+```
