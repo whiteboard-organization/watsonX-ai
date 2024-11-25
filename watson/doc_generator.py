@@ -1,4 +1,3 @@
-import os
 import warnings
 
 from ibm_watsonx_ai import APIClient
@@ -6,12 +5,6 @@ from ibm_watson_machine_learning.foundation_models import Model
 from token_generator import generate_token
 
 warnings.filterwarnings("ignore")
-
-prompt = "input" """<|system|>
-    generate a readme file in markdown format that documents the code below.
-    the answer should contain exclusively the content of the markdown readme file, without any additional information.
-    here is the code:
-    """
 
 def generate_doc(project_id, api_key, input_text, model_id, model_endpoint_url, model_params):
     try:
