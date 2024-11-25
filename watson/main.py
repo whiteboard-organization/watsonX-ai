@@ -29,6 +29,7 @@ projects_dict = {project['PROJECT_ID']: {'API_Key': project['API_Key'], 'Endpoin
 
 for project_id, project_info in projects_dict.items():
     print(f"Project ID: {project_id} - API Key: {project_info['API_Key']}")
+    print(generate_token(project_info['API_Key']))
 
 prompt = "input" """<|system|>
     generate a readme file in markdown format that documents the code below.
