@@ -1,6 +1,6 @@
 # WatsonX AI Documentation Generator
 
-This project generates documentation for code files in a GitHub repository using IBM WatsonX AI.
+This project generates documentation for code files in a local repository using IBM WatsonX AI.
 
 ## Table of Contents
 
@@ -21,8 +21,6 @@ WatsonX AI is a project aimed at utilizing IBM Watson's capabilities to develop 
 
 - Natural Language Processing (NLP)
 - Machine Learning (ML)
-- Data Analysis
-- Model Training and Deployment
 - Integration with IBM Cloud
 
 ## Installation
@@ -41,31 +39,6 @@ To install the WatsonX AI project, follow these steps:
     ```bash
     pip install -r requirements.txt
     ```
-
-## Usage
-
-To use the WatsonX AI project, follow these steps:
-
-1. Train a model:
-    ```bash
-    python train_model.py
-    ```
-2. Deploy the model:
-    ```bash
-    python deploy_model.py
-    ```
-3. Analyze data:
-    ```bash
-    python analyze_data.py
-    ```
-
-## Contributing
-
-We welcome contributions to the WatsonX AI project! Please read our [contributing guidelines](CONTRIBUTING.md) for more information.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Project Structure
 
@@ -97,3 +70,4 @@ The project requires a configuration file `config.json` located in the `watson` 
         "param2": "value2"
     }
 }
+```
