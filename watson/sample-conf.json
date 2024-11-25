@@ -5,7 +5,7 @@
   "COS_ENDPOINT_URL": "https://s3.eu-de.cloud-object-storage.appdomain.cloud",
   "COS_BUCKET_NAME": "cloud-object-storage-cos-terraform-code",
   "GITHUB_TOKEN": "{{MY_GITHUB_TOKEN}}",
-  "GITHUB_REPO": "whiteboard-organization/eks_infra",
+  "GITHUB_REPO": "whiteboard-organization/application_config",
   "GITHUB_BRANCH": "develop",
   "PROJECTS_PARAMS": [
     {
