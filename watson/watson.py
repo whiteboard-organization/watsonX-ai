@@ -79,11 +79,14 @@ def main():
     print(code_files)
 
 
+    results = []
     project_id = "845ef238-5f5c-4155-b84b-9b4ab9759270"
     api_key = api_key
     endpoint_url = "https://eu-de.ml.cloud.ibm.com"
     print(f"Generating documentation using project {project_id}")
     result = generate_doc(project_id, api_key, code_files, model_id, endpoint_url, model_params)
+    print(result)
+    results.extend(result)
 
     # Ensure the docs_path directory exists
     os.makedirs(docs_path, exist_ok=True)
