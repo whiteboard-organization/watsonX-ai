@@ -53,9 +53,11 @@ def main():
 
     parser = argparse.ArgumentParser(description='Read files and list directory contents from a local repository.')
     parser.add_argument('repo_path', type=str, help='Path to the local repository')
+    parser.add_argument('api_key', type=str, help='API key to interact with Watson X')
 
     args = parser.parse_args()
     repo_path = args.repo_path
+    api_key = args.api_key
     
     code_file_list = list_files_in_local_repo(repo_path)
     print("files found in repo:", code_file_list)
