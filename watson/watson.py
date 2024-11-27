@@ -22,6 +22,9 @@ projects_params = {
     config['PROJECTS_PARAMS']['PROJECT_ID']: config['PROJECTS_PARAMS']['MODEL_ENDPOINT_URL']
 }
 
+print("Type of config['PROJECTS_PARAMS']:", type(config['PROJECTS_PARAMS']))
+print("Content of config['PROJECTS_PARAMS']:", config['PROJECTS_PARAMS'])
+
 prompt = "input" """<|system|>
     generate a readme file in markdown format that documents the code below.
     your response should contain exclusively the content of the markdown readme file. so it should start with the title, followed by the description, and then the code documentation.
