@@ -80,7 +80,7 @@ def main():
 
 
     results = []
-    project_id = "845ef238-5f5c-4155-b84b-9b4ab9759270"
+    project_id = "4eefdc1f-7d68-4c56-af80-25cafb42097a"
     api_key = api_key
     endpoint_url = "https://eu-de.ml.cloud.ibm.com"
     print(f"Generating documentation using project {project_id}")
