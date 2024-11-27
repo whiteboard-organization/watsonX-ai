@@ -76,7 +76,6 @@ def main():
     for project in projects_params:
         project_id = project['PROJECT_ID']
         endpoint_url = project['MODEL_ENDPOINT_URL']
-        api_key = project['API_Key']
         print(f"Generating documentation using project {project_id}")
         result = generate_doc(project_id, api_key, code_files, model_id, endpoint_url, model_params)
         # Extract generated_text from result and remove the last line
