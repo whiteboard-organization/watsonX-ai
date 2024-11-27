@@ -18,12 +18,7 @@ file_extensions = config['FILE_EXTENSIONS']
 model_id = config['MODEL_ID']
 model_params = config['MODEL_PARAMS']
 # Adjust projects_params to handle the given config structure
-projects_params = {
-    config['PROJECTS_PARAMS']['PROJECT_ID']: config['PROJECTS_PARAMS']['MODEL_ENDPOINT_URL']
-}
-
-print("Type of config['PROJECTS_PARAMS']:", type(config['PROJECTS_PARAMS']))
-print("Content of config['PROJECTS_PARAMS']:", config['PROJECTS_PARAMS'])
+projects_params = config['PROJECTS_PARAMS']
 
 prompt = "input" """<|system|>
     generate a readme file in markdown format that documents the code below.
@@ -58,11 +53,9 @@ def main():
 
     parser = argparse.ArgumentParser(description='Read files and list directory contents from a local repository.')
     parser.add_argument('repo_path', type=str, help='Path to the local repository')
-    parser.add_argument('api_key', type=str, help='api key to interact with watson x')
 
     args = parser.parse_args()
     repo_path = args.repo_path
-    api_key = args.api_key
     
     code_file_list = list_files_in_local_repo(repo_path)
     print("files found in repo:", code_file_list)
@@ -72,30 +65,34 @@ def main():
         if any(file_key.endswith(ext) for ext in file_extensions):
             file_content = read_file_from_local_path(file_key)
             if file_content:
-                code_files +="\n" + file_key + "\n" + file_content 
-    code_files += "\n <|assistant|>\n"
+                code_files += "\n" + file_key + "\n" + file_content
+    code_files += "\n<|assistant|>\n"
     
     print(code_files)
 
-    project_id, endpoint_url = next(iter(projects_params.items()))
-    print(f"Generating documentation using project {project_id}")
-    result = generate_doc(project_id, api_key, code_files, model_id, endpoint_url, model_params)
-    # Extract generated_text from result and remove the last line
-    md_text = [res.get('generated_text', '').replace('---<|endoftext|>', '').rstrip('\n') for res in result]
+    # Loop over each project in projects_params
+    for project in projects_params:
+        project_id = project['PROJECT_ID']
+        endpoint_url = project['MODEL_ENDPOINT_URL']
+        api_key = project['API_Key']
+        print(f"Generating documentation using project {project_id}")
+        result = generate_doc(project_id, api_key, code_files, model_id, endpoint_url, model_params)
+        # Extract generated_text from result and remove the last line
+        md_text = [res.get('generated_text', '').replace('---<|endoftext|>', '').rstrip('\n') for res in result]
 
-    # Ensure the docs_path directory exists
-    os.makedirs(docs_path, exist_ok=True)
+        # Ensure the docs_path directory exists
+        os.makedirs(docs_path, exist_ok=True)
 
-    md_file_name = f"{docs_path}/documentation.md"
-    with open(md_file_name, 'w') as file:
-        # Save the generated text as a markdown file
-        file.write('\n'.join(md_text))
+        # Save the generated documentation with a unique filename per project
+        md_file_name = f"{docs_path}/documentation_{project_id}.md"
+        with open(md_file_name, 'w') as file:
+            file.write('\n'.join(md_text))
 
     end_time = time.time()
     duration = end_time - start_time
 
     print(f"Execution duration: {duration} seconds")
-    print("Generated file:", md_file_name)
+    print(f"Generated documentation files are located in: {docs_path}")
 
 if __name__ == "__main__":
     main()
