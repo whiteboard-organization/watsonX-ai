@@ -15,10 +15,6 @@ def load_config():
 config = load_config()
 
 docs_path = os.path.join(get_parent_file_path(), "docs")
-# repo_path = config['GITHUB_REPO']
-# git_branch = config['GITHUB_BRANCH']
-# github_token = config['GITHUB_TOKEN']
-# projects_params = config['PROJECTS_PARAMS']
 file_extensions = config['FILE_EXTENSIONS']
 model_id = config['MODEL_ID']
 model_params = config['MODEL_PARAMS']
@@ -56,7 +52,6 @@ def main():
     parser.add_argument('repo_path', type=str, help='Path to the local repository')
     parser.add_argument('api_key', type=str, help='api key to interact with watson x')
 
-
     args = parser.parse_args()
 
     repo_path = args.repo_path
@@ -67,9 +62,6 @@ def main():
     code_file_list = list_files_in_local_repo(repo_path)
     print("files found in repo:", code_file_list)
     
-    
-
-
     code_files = prompt
     for file_key in code_file_list:
         if any(file_key.endswith(ext) for ext in file_extensions):
@@ -77,7 +69,6 @@ def main():
             if file_content:
                 code_files +="\n" + file_key + "\n" + file_content + "\n <|assistant|>\n"
     print(code_files)
-
 
     results = []
     project_id = "4eefdc1f-7d68-4c56-af80-25cafb42097a"
@@ -88,7 +79,6 @@ def main():
     print(result)
     results.extend(result)
 
-    # Ensure the docs_path directory exists
     os.makedirs(docs_path, exist_ok=True)
 
     filenames = []
@@ -96,7 +86,6 @@ def main():
         md_file_name = f"{docs_path}/documentation_{i + 1}.md"
         filenames.append(md_file_name)
         with open(md_file_name, 'w') as file:
-            # Save the generated text into the markdown file
             file.write(result.get('generated_text', ''))
 
     end_time = time.time()

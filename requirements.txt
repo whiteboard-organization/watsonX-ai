@@ -1,0 +1,4 @@
+numpy==1.23.5
+pandas==1.5.3
+ibm-watson-machine-learning==1.0.333
+ibm-watsonx-ai==0.0.5
